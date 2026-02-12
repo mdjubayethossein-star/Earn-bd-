@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn bd - Official Mini App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <script src='//libtl.com/sdk.js' data-zone='9465942' data-sdk='show_9465942'></script>
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(180deg, #ff007f 0%, #ff69b4 100%);
+            --card-white: rgba(255, 255, 255, 0.95);
+            --pink-text: #ff007f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            background: var(--bg-gradient);
+            color: #333;
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        /* Header Layout */
+        .header {
+            padding: 25px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        .profile-section { display: flex; align-items: center; gap: 12px; }
+        .avatar {
+            width: 55px; height: 55px;
+            border-radius: 50%; border: 3px solid #fff;
+            object-fit: cover;
+        }
+        .wallet-badge {
+            background: linear-gradient(90deg, #4b134f, #c94b4b);
+            padding: 8px 15px; border-radius: 20px;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Main Container */
+        .container {
+            background: var(--card-white);
+            border-radius: 40px 40px 0 0;
+            padding: 25px 20px;
+            min-height: 75vh;
+            box-shadow: 0 -10px 20px rgba(0,0,0,0.1);
+        }
+
+        .promo-text {
+            color: #ff007f; font-weight: bold; text-align: center;
+            margin-bottom: 20px; font-size: 1.1rem;
+        }
+
+        /* Menu Grid (Exact as Screenshot) */
+        .menu-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 15px; margin-top: 10px;
+        }
+        .menu-item {
+            background: white; border-radius: 20px;
+            padding: 20px 10px; text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .menu-item:active { transform: scale(0.9); }
+        .icon-box {
+            width: 45px; height: 45px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px; color: white; font-size: 20px;
+        }
+
+        /* Specific Page Screens */
+        .screen {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: var(--card-white);
+            z-index: 100; padding: 20px; box-sizing: border-box;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* UI Elements */
+        .btn-action {
+            width: 100%; padding: 15px; border-radius: 15px;
+            border: none; font-size: 18px; font-weight: bold;
+            color: white; cursor: pointer; margin-top: 20px;
+        }
+        .btn-next-ad { background: linear-gradient(90deg, #7b2ff7, #f107a3); }
+        .back-btn { font-size: 24px; color: #333; cursor: pointer; margin-bottom: 20px; }
+
+        .progress-container {
+            background: #f0f0f0; border-radius: 10px;
+            height: 12px; margin: 15px 0; overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #7b2ff7, #f107a3);
+            transition: 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="home-screen">
+        <div class="header">
+            <div class="profile-section">
+                <img src="https://via.placeholder.com/100" id="u-avatar" class="avatar">
+                <div>
+                    <div style="font-weight: bold;" id="u-name">MD Sobuj</div>
+                    <small id="u-username">@loading...</small>
+                </div>
+            </div>
+            <div class="wallet-badge">
+                <i class="fas fa-coins" style="color: gold;"></i>
+                <span id="u-balance">10.90</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="promo-text">"ALTAS LAB" Product</div>
+            <p style="font-size: 13px; text-align: center; color: #666;">কাজ সম্পন্ন করে জিতে নিন আকর্ষণীয় বোনাস!</p>
+
+            <div class="menu-grid">
+                <div class="menu-item" onclick="showScreen('task-screen')">
+                    <div class="icon-box" style="background: #7b2ff7;"><i class="fas fa-briefcase"></i></div>
+                    <small>Start Task</small>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box" style="background: #0088cc;"><i class="fab fa-telegram-plane"></i></div>
+                    <small>Telegram Task</small>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box" style="background: #ff4081;"><i class="fas fa-user"></i></div>
+                    <small>Profile</small>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box" style="background: #ff9800;"><i class="fas fa-crown"></i></div>
+                    <small>Top Users</small>
+                </div>
+                <div class="menu-item" onclick="showScreen('withdraw-screen')">
+                    <div class="icon-box" style="background: #00c853;"><i class="fas fa-wallet"></i></div>
+                    <small>Withdraw</small>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box" style="background: #333;"><i class="fas fa-code"></i></div>
+                    <small>Developer</small>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box" style="background: #f44336;"><i class="fas fa-bell"></i></div>
+                    <small>Notice</small>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box" style="background: #2196f3;"><i class="fas fa-history"></i></div>
+                    <small>History</small>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box" style="background: #9c27b0;"><i class="fas fa-headset"></i></div>
+                    <small>Support</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="task-screen" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="hideScreen('task-screen')"></i>
+        <div style="text-align: right; color: #ff007f; font-weight: bold; font-size: 20px;">
+            ৳ <span class="current-bal">10.90</span>
+        </div>
+
+        <div style="background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between;">
+                <span>Daily Progress</span>
+                <span id="count-text">0 / 100</span>
+            </div>
+            <div class="progress-container"><div class="progress-bar" id="pg-bar"></div></div>
+            
+            <p style="text-align: center; margin: 40px 0; color: #666;">Ready to earn...</p>
+            
+            <button class="btn-action btn-next-ad" onclick="runMonetagAd()">NEXT AD <i class="fas fa-play"></i></button>
+        </div>
+    </div>
+
+    <div id="withdraw-screen" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="hideScreen('withdraw-screen')"></i>
+        <div style="background: #ff007f; color: white; padding: 30px; border-radius: 20px; text-align: center;">
+            <small>Available Balance</small>
+            <h1 style="margin: 5px 0;">৳ <span class="current-bal">10.90</span></h1>
+        </div>
+        
+        <p style="margin-top: 20px; font-weight: bold;">Amount</p>
+        <input type="number" placeholder="0.00 BDT" style="width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box;">
+        
+        <p style="margin-top: 15px; font-weight: bold;">Select Method</p>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1; border: 1px solid #ff007f; padding: 10px; border-radius: 10px; text-align: center; background: #fff0f5;">Bkash</div>
+            <div style="flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 10px; text-align: center;">Nagad</div>
+        </div>
+
+        <button class="btn-action" style="background: #ff007f;" onclick="alert('বিকাশ বা নগদ নম্বর দিন!')">Request Withdrawal</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // প্রাথমিক ডাটা
+        let balance = 10.90;
+        let adCount = 0;
+        const AD_LIMIT = 100; // আপনার চাওয়া অনুযায়ী ১০০ লিমিট
+
+        // টেলিগ্রাম থেকে ইউজার ডাটা লোড
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            document.getElementById('u-name').innerText = tg.initDataUnsafe.user.first_name;
+            document.getElementById('u-username').innerText = "@" + (tg.initDataUnsafe.user.username || "user");
+            if(tg.initDataUnsafe.user.photo_url) {
+                document.getElementById('u-avatar').src = tg.initDataUnsafe.user.photo_url;
+            }
+        }
+
+        function showScreen(id) { document.getElementById(id).style.display = 'block'; }
+        function hideScreen(id) { document.getElementById(id).style.display = 'none'; }
+
+        // মনিটেগ অ্যাড রান করার মেইন ফাংশন
+        function runMonetagAd() {
+            if (adCount >= AD_LIMIT) {
+                tg.showAlert("আজকের ১০০টি অ্যাড দেখা শেষ! আগামীকাল আবার চেষ্টা করুন।");
+                return;
+            }
+
+            // মনিটেগ SDK কল করা (show_9465942 ফাংশনটি আপনার স্ক্রিপ্ট থেকে আসে)
+            if (typeof show_9465942 === 'function') {
+                show_9465942().then(() => {
+                    // অ্যাড দেখা শেষ হলে যা হবে
+                    rewardUser();
+                }).catch((e) => {
+                    // যদি অ্যাড লোড না হয় তবে সরাসরি রিওয়ার্ড (টেস্টের জন্য)
+                    console.log("Ad skipped or error:", e);
+                    rewardUser(); 
+                });
+            } else {
+                // স্ক্রিপ্ট কাজ না করলে ব্যাকআপ মেসেজ
+                tg.showPopup({title: "Ad Error", message: "অ্যাড লোড হচ্ছে না। আপনার ইন্টারনেট চেক করুন।"});
+            }
+        }
+
+        function rewardUser() {
+            adCount++;
+            balance += 0.20; // প্রতি অ্যাডে ০.২০ টাকা (আপনি চাইলে কমাতে বা বাড়াতে পারেন)
+            updateUI();
+            
+            tg.showPopup({
+                title: "অভিনন্দন!",
+                message: "অ্যাড সফলভাবে দেখেছেন। ব্যালেন্স যোগ হয়েছে।"
+            });
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.current-bal').forEach(el => el.innerText = balance.toFixed(2));
+            document.getElementById('u-balance').innerText = balance.toFixed(2);
+            document.getElementById('count-text').innerText = `${adCount} / ${AD_LIMIT}`;
+            
+            let progressPercent = (adCount / AD_LIMIT) * 100;
+            document.getElementById('pg-bar').style.width = progressPercent + "%";
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
