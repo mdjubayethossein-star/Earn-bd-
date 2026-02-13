@@ -13,16 +13,19 @@
         :root { --main: #ff007f; --white: #ffffff; --bg: #fff0f5; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: linear-gradient(180deg, #ff007f 0%, #ff69b4 100%); color: #333; min-height: 100vh; overflow-x: hidden; }
         
-        /* Dashboard */
+        /* Header */
         .header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; color: white; }
         .u-info { display: flex; align-items: center; gap: 12px; }
         .avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
         .wallet-box { background: rgba(0,0,0,0.25); padding: 7px 15px; border-radius: 20px; font-weight: bold; }
 
+        /* Container */
         .container { background: var(--white); border-radius: 35px 35px 0 0; padding: 25px 20px; min-height: 85vh; box-shadow: 0 -10px 20px rgba(0,0,0,0.1); }
-        .brand-text { text-align: center; font-weight: bold; color: var(--main); font-size: 1.3rem; margin-bottom: 20px; }
+        .brand-box { text-align: center; margin-bottom: 20px; }
+        .brand-text { font-weight: 900; color: var(--main); font-size: 1.6rem; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+        .brand-sub { font-size: 12px; color: #888; display: block; }
         
-        /* Menu Grid */
+        /* Grid Menu */
         .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .menu-item { background: white; border-radius: 20px; padding: 20px 5px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06); cursor: pointer; transition: 0.2s; }
         .menu-item:active { transform: scale(0.9); }
@@ -39,6 +42,7 @@
         .list-row { display: flex; justify-content: space-between; padding: 12px; background: #f9f9f9; border-radius: 12px; margin-bottom: 8px; }
         
         input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin-top: 5px; box-sizing: border-box; }
+        .hidden-task { display: none !important; }
     </style>
 </head>
 <body>
@@ -53,14 +57,20 @@
         </div>
 
         <div class="container">
-            <div class="brand-text">"ALTAS LAB" Product</div>
+            <div class="brand-box">
+                <h1 class="brand-text">Earn bd <i class="fas fa-check-circle" style="font-size: 18px;"></i></h1>
+                <span class="brand-sub">The Best Earning Platform 2026</span>
+            </div>
+
             <div class="menu-grid">
                 <div class="menu-item" onclick="nav('monetag-task')"><div class="icon-box" style="background:#7b2ff7;"><i class="fas fa-play"></i></div><small>Start Task</small></div>
                 <div class="menu-item" onclick="nav('tg-task')"><div class="icon-box" style="background:#0088cc;"><i class="fab fa-telegram-plane"></i></div><small>TG Task</small></div>
                 <div class="menu-item" onclick="nav('profile-sc')"><div class="icon-box" style="background:#ff4081;"><i class="fas fa-user"></i></div><small>Profile</small></div>
+                
                 <div class="menu-item" onclick="nav('top-sc')"><div class="icon-box" style="background:#ff9800;"><i class="fas fa-crown"></i></div><small>Top Users</small></div>
                 <div class="menu-item" onclick="nav('withdraw-sc')"><div class="icon-box" style="background:#00c853;"><i class="fas fa-wallet"></i></div><small>Withdraw</small></div>
                 <div class="menu-item" onclick="window.open('https://t.me/earnkingadmin')"><div class="icon-box" style="background:#333;"><i class="fas fa-code"></i></div><small>Developer</small></div>
+                
                 <div class="menu-item" onclick="nav('notice-sc')"><div class="icon-box" style="background:#f44336;"><i class="fas fa-bell"></i></div><small>Notice</small></div>
                 <div class="menu-item" onclick="nav('history-sc')"><div class="icon-box" style="background:#2196f3;"><i class="fas fa-history"></i></div><small>History</small></div>
                 <div class="menu-item" onclick="window.open('https://t.me/earnkingadmin')"><div class="icon-box" style="background:#9c27b0;"><i class="fas fa-headset"></i></div><small>Support</small></div>
@@ -81,28 +91,25 @@
         </div>
     </div>
 
-    <div id="withdraw-sc" class="screen">
+    <div id="tg-task" class="screen">
         <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
-        <h3 style="text-align:center;">Withdraw Fund</h3>
-        <div class="card" style="background:var(--main); color:white; text-align:center; border:none;">
-            <p>Your Current Balance</p>
-            <h1>৳ <span class="val-bal">0.00</span></h1>
+        <h3>Special Tasks</h3>
+        <div id="task-gemgala" class="card">
+            <b>Gemgala Offer (৳ 5.00)</b><br>
+            <p style="font-size:11px; color:#555;">সীমা: ১০০ জন | প্রমাণ: ফেস ভেরিফাইড স্ক্রিনশট।</p>
+            <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://getblock.me/u/24587869')">Open Link</button>
+            <input type="file" id="gem-file" style="margin-top:10px;">
+            <button class="btn-action" onclick="finishTGTask('task-gemgala', 5, true)">Submit Proof</button>
         </div>
-        
-        <div style="margin-top:20px;">
-            <label>Select Payment Method:</label>
-            <select id="w-method">
-                <option value="Bkash">Bkash (Min 50)</option>
-                <option value="Nagad">Nagad (Min 50)</option>
-            </select>
-            
-            <label style="display:block; margin-top:15px;">Amount:</label>
-            <input type="number" id="w-amt" placeholder="Enter amount (Min 50)">
-            
-            <label style="display:block; margin-top:15px;">Number:</label>
-            <input type="text" id="w-num" placeholder="Enter Bkash/Nagad number">
-            
-            <button class="btn-action" onclick="doWithdraw()">WITHDRAW NOW</button>
+        <div id="task-channel" class="card">
+            <b>Join Channel (৳ 1.00)</b><br>
+            <p style="font-size:11px; color:#555;">সীমা: ১০০০ জন | জয়েন করে ভেরিফাই করুন।</p>
+            <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://t.me/incomeupdattesbd')">Join Now</button>
+            <button class="btn-action" onclick="finishTGTask('task-channel', 1, false)">Verify Join</button>
+        </div>
+        <div id="no-tasks" class="hidden-task" style="text-align:center; margin-top:50px; color:#999;">
+            <i class="fas fa-check-double" style="font-size:50px;"></i>
+            <p>আপনার সব টাস্ক শেষ!</p>
         </div>
     </div>
 
@@ -110,39 +117,42 @@
         <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
         <div style="text-align:center;">
             <img id="prof-img" src="" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--main);">
-            <h2 id="prof-name">User Name</h2>
+            <h2 id="prof-name">User</h2>
             <div class="card">
-                <div class="list-row"><span>Balance:</span> <b>৳ <span class="val-bal">0.00</span></b></div>
-                <div class="list-row"><span>Task Done:</span> <b id="prof-task-done">0</b></div>
+                <div class="list-row"><span>Balance:</span> ৳ <span class="val-bal">0.00</span></div>
+                <div class="list-row"><span>Total Tasks:</span> <b id="prof-task-done">0</b></div>
             </div>
-            <button class="btn-action" onclick="nav('refer-sc')">Invite Friends (৳ 1.00)</button>
+            <button class="btn-action" onclick="nav('refer-sc')">My Referral Link</button>
         </div>
     </div>
 
     <div id="top-sc" class="screen">
         <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
-        <h3 style="text-align:center;"><i class="fas fa-crown" style="color:gold;"></i> Top 10 Earners</h3>
+        <h3><i class="fas fa-crown" style="color:gold;"></i> Top 10 Earners</h3>
         <div id="leaderboard">
             <div class="list-row"><span>1. MD Sobuj</span> <b>৳ 105.00</b></div>
             <div class="list-row"><span>2. Rakib Islam</span> <b>৳ 80.50</b></div>
             <div class="list-row"><span>3. Sumon Ahmad</span> <b>৳ 65.00</b></div>
+            <div class="list-row"><span>4. You</span> <b>৳ <span class="val-bal">0.00</span></b></div>
         </div>
     </div>
 
-    <div id="refer-sc" class="screen">
+    <div id="withdraw-sc" class="screen">
         <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
-        <h3>Referral Program</h3>
-        <div class="card" style="text-align:center;">
-            <p>প্রতি সফল রেফারে পাবেন ১ টাকা!</p>
-            <div id="ref-link-box" style="background:#fff; padding:15px; border:2px dashed var(--main); font-size:12px; word-break:break-all; margin:15px 0;">Loading...</div>
-            <button class="btn-action" onclick="copyRef()">COPY LINK</button>
+        <div class="card" style="background:var(--main); color:white; text-align:center;">
+            <p>Current Balance</p>
+            <h1>৳ <span class="val-bal">0.00</span></h1>
         </div>
+        <select id="w-method"><option value="Bkash">Bkash</option><option value="Nagad">Nagad</option></select>
+        <input type="number" id="w-amt" placeholder="Enter amount (Min 50)">
+        <input type="text" id="w-num" placeholder="Enter Number">
+        <button class="btn-action" onclick="doWithdraw()">WITHDRAW NOW</button>
     </div>
 
     <div id="history-sc" class="screen">
         <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
-        <h3 style="text-align:center;">Withdraw History</h3>
-        <div id="history-container" style="text-align:center; margin-top:50px; color:#999;">
+        <h3>Withdraw History</h3>
+        <div style="text-align:center; margin-top:50px; color:#999;">
             <i class="fas fa-history" style="font-size:50px;"></i>
             <p>No history found!</p>
         </div>
@@ -155,23 +165,17 @@
             📢 <b>Earn bd Update:</b><br><br>
             - প্রতি অ্যাডে পাবেন ০.০৭ টাকা।<br>
             - রেফার বোনাস ১ টাকা।<br>
-            - পেমেন্ট লিমিট ৫০ টাকা বিকাশ ও নগদে।<br>
-            - সাপোর্ট আইডি: @earnkingadmin
+            - পেমেন্ট লিমিট ৫০ টাকা বিকাশ ও নগদে।
         </div>
     </div>
 
-    <div id="tg-task" class="screen">
+    <div id="refer-sc" class="screen">
         <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
-        <h3>Special Tasks</h3>
-        <div class="card">
-            <b>Gemgala Offer (৳ 5.00)</b><br>
-            <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://getblock.me/u/24587869')">Open Link</button>
-            <button class="btn-action" onclick="alert('Submitted for review!')">Submit Proof</button>
-        </div>
-        <div class="card">
-            <b>Join Channel (৳ 1.00)</b><br>
-            <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://t.me/incomeupdattesbd')">Join Now</button>
-            <button class="btn-action" onclick="addMoney(1)">Verify Join</button>
+        <h3>Refer & Earn</h3>
+        <div class="card" style="text-align:center;">
+            <p>প্রতি সফল রেফারে পাবেন ১ টাকা!</p>
+            <div id="ref-link-box" style="background:#fff; padding:15px; border:2px dashed var(--main); font-size:11px; word-break:break-all; margin:10px 0;">Loading...</div>
+            <button class="btn-action" onclick="copyRef()">COPY LINK</button>
         </div>
     </div>
 
@@ -179,12 +183,10 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         
-        // Data Handling
         let balance = parseFloat(localStorage.getItem('user_bal')) || 0.00;
         let adCount = parseInt(localStorage.getItem('user_ads')) || 0;
         const BOT_USER = "earnbd75_bot";
 
-        // UI Setup
         if(tg.initDataUnsafe.user) {
             const u = tg.initDataUnsafe.user;
             document.getElementById('home-name').innerText = u.first_name;
@@ -198,64 +200,47 @@
 
         function nav(id) { 
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page'));
-            document.getElementById(id).classList.add('active-page'); 
+            document.getElementById(id).classList.add('active-page');
+            if(id === 'tg-task') checkCompletedTasks();
         }
-        function back() { 
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page')); 
-        }
+        function back() { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page')); }
 
-        // Start Task Function (Fixed)
         function runAd() {
-            if(adCount >= 100) return alert("Daily limit reached!");
-            
-            // Monetag Ad Logic
+            if(adCount >= 100) return alert("Limit Over!");
             if (typeof show_9465942 === 'function') {
-                show_9465942().then(() => { completeAdReward(); }).catch(() => { completeAdReward(); });
-            } else {
-                completeAdReward(); // Fallback for testing
-            }
+                show_9465942().then(() => { completeAd(); }).catch(() => { completeAd(); });
+            } else { completeAd(); }
         }
 
-        function completeAdReward() {
-            balance += 0.07;
-            adCount++;
-            saveData();
-            updateUI();
-            tg.showPopup({message: "Success! ০.০৭ টাকা যোগ হয়েছে।", title: "Reward"});
+        function completeAd() {
+            balance += 0.07; adCount++;
+            save(); updateUI();
+            tg.showPopup({message: "০.০৭ টাকা যোগ হয়েছে!"});
         }
 
-        // Withdraw Function (Fixed)
+        function finishTGTask(taskId, reward, isFile) {
+            if(isFile && !document.getElementById('gem-file').files[0]) return alert("ফাইল আপলোড করুন!");
+            balance += reward;
+            localStorage.setItem(taskId, 'done');
+            save(); updateUI(); checkCompletedTasks();
+            alert("টাস্ক সফল!");
+        }
+
+        function checkCompletedTasks() {
+            if(localStorage.getItem('task-gemgala') === 'done') document.getElementById('task-gemgala').classList.add('hidden-task');
+            if(localStorage.getItem('task-channel') === 'done') document.getElementById('task-channel').classList.add('hidden-task');
+            if(localStorage.getItem('task-gemgala') === 'done' && localStorage.getItem('task-channel') === 'done') document.getElementById('no-tasks').classList.remove('hidden-task');
+        }
+
         function doWithdraw() {
-            const amount = parseFloat(document.getElementById('w-amt').value);
-            const method = document.getElementById('w-method').value;
-            const number = document.getElementById('w-num').value;
-
-            if (isNaN(amount) || amount < 50) return alert("মিনিমাম ৫০ টাকা থাকতে হবে!");
-            if (amount > balance) return alert("পর্যাপ্ত ব্যালেন্স নেই!");
-            if (number.length < 11) return alert("সঠিক বিকাশ/নগদ নাম্বার দিন!");
-
-            alert(`Request Sent! ${amount} TK will be sent to ${number} via ${method}.`);
-            balance -= amount;
-            saveData();
-            updateUI();
-            
-            // Reset fields
-            document.getElementById('w-amt').value = '';
-            document.getElementById('w-num').value = '';
+            const a = parseFloat(document.getElementById('w-amt').value);
+            if(a < 50 || a > balance) return alert("সঠিক এমাউন্ট দিন (Min 50)!");
+            balance -= a; save(); updateUI();
+            alert("উইথড্র রিকোয়েস্ট সফল!");
         }
 
-        function addMoney(amt) {
-            balance += amt;
-            saveData();
-            updateUI();
-            alert(amt + " টাকা যোগ হয়েছে!");
-        }
-
-        function saveData() {
-            localStorage.setItem('user_bal', balance);
-            localStorage.setItem('user_ads', adCount);
-        }
-
+        function save() { localStorage.setItem('user_bal', balance); localStorage.setItem('user_ads', adCount); }
+        
         function updateUI() {
             document.getElementById('main-balance').innerText = balance.toFixed(2);
             document.querySelectorAll('.val-bal').forEach(e => e.innerText = balance.toFixed(2));
@@ -266,13 +251,7 @@
 
         function copyRef() {
             const link = document.getElementById('ref-link-box').innerText;
-            const el = document.createElement('textarea');
-            el.value = link;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-            tg.showPopup({message: "Link Copied! Share to earn 1 TK."});
+            navigator.clipboard.writeText(link).then(() => alert("Link Copied!"));
         }
 
         updateUI();
