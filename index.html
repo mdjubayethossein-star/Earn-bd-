@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <script src='//libtl.com/sdk.js' data-zone='9465942' data-sdk='show_9465942'></script>
+    <script src='//libtl.com/sdk.js' data-zone='9384518' data-sdk='show_9384518'></script>
 
     <style>
         :root { --main: #ff007f; --white: #ffffff; --bg: #fff0f5; }
@@ -87,7 +87,7 @@
             <div style="background:#eee; height:12px; border-radius:10px; margin:15px 0; overflow:hidden;">
                 <div id="ad-progress-bar" style="background:var(--main); height:100%; width:0%; transition:0.3s;"></div>
             </div>
-            <button class="btn-action" onclick="runAd()">WATCH AD</button>
+            <button class="btn-action" id="watch-btn" onclick="runAd()">WATCH AD</button>
         </div>
     </div>
 
@@ -103,7 +103,7 @@
         </div>
         <div id="task-channel" class="card">
             <b>Join Channel (৳ 1.00)</b><br>
-            <p style="font-size:11px; color:#555;">সীমা: ১০০০ জন | জয়েন করে ভেরিফাই করুন।</p>
+            <p style="font-size:11px; color:#555;">সীমা: ১০০০ জন | জয়েন করে ভেরিফাই করুন।</p>
             <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://t.me/incomeupdattesbd')">Join Now</button>
             <button class="btn-action" onclick="finishTGTask('task-channel', 1, false)">Verify Join</button>
         </div>
@@ -205,19 +205,32 @@
         }
         function back() { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page')); }
 
+        // --- HIGH CPM AD LOGIC ---
         function runAd() {
             if(adCount >= 100) return alert("Limit Over!");
-            if (typeof show_9465942 === 'function') {
-                show_9465942().then(() => { completeAd(); }).catch(() => { completeAd(); });
-            } else { completeAd(); }
+            document.getElementById('watch-btn').innerText = "Loading Ad...";
+
+            // Rewarded Popup ('pop') ফরম্যাট যা অনেক হাই CPM দেয়
+            if (typeof show_9384518 === 'function') {
+                show_9384518('pop').then(() => {
+                    completeAd();
+                }).catch(e => {
+                    // যদি পপআপ ফেইল হয় তবে ইন্টারস্টিশিয়াল ট্রাই করবে
+                    show_9384518().then(() => { completeAd(); });
+                });
+            } else {
+                completeAd(); // Testing
+            }
         }
 
         function completeAd() {
             balance += 0.07; adCount++;
             save(); updateUI();
-            tg.showPopup({message: "০.০৭ টাকা যোগ হয়েছে!"});
+            document.getElementById('watch-btn').innerText = "WATCH AD";
+            tg.showPopup({message: "অভিনন্দন! হাই CPM রিওয়ার্ড (৳ ০.০৭) যোগ হয়েছে!"});
         }
 
+        // --- OTHER LOGIC (অক্ষত রাখা হয়েছে) ---
         function finishTGTask(taskId, reward, isFile) {
             if(isFile && !document.getElementById('gem-file').files[0]) return alert("ফাইল আপলোড করুন!");
             balance += reward;
@@ -236,7 +249,7 @@
             const a = parseFloat(document.getElementById('w-amt').value);
             if(a < 50 || a > balance) return alert("সঠিক এমাউন্ট দিন (Min 50)!");
             balance -= a; save(); updateUI();
-            alert("উইথড্র রিকোয়েস্ট সফল!");
+            alert("উইথড্র রিকোয়েস্ট সফল!");
         }
 
         function save() { localStorage.setItem('user_bal', balance); localStorage.setItem('user_ads', adCount); }
