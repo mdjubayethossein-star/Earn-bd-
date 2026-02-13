@@ -1,49 +1,260 @@
-<script src='//libtl.com/sdk.js' data-zone='9384518' data-sdk='show_9384518'></script>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn bd</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <script src='//libtl.com/sdk.js' data-zone='9465942' data-sdk='show_9465942'></script>
 
-<script>
-    function runAd() {
-        if (adCount >= 100) return alert("Limit Over!");
+    <style>
+        :root { --main: #ff007f; --white: #ffffff; --bg: #fff0f5; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: linear-gradient(180deg, #ff007f 0%, #ff69b4 100%); color: #333; min-height: 100vh; overflow-x: hidden; }
         
-        const btn = document.getElementById('watch-btn');
-        btn.innerText = "Loading Ad...";
-        btn.disabled = true; // অ্যাড লোড হওয়ার সময় বাটন লক থাকবে
+        /* Header */
+        .header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        .u-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
+        .wallet-box { background: rgba(0,0,0,0.25); padding: 7px 15px; border-radius: 20px; font-weight: bold; }
 
-        // ইন-অ্যাপ ইন্টারস্টিশিয়াল ফরম্যাট (এটি বটের বাইরে নিয়ে যাবে না)
-        show_9384518({
-            type: 'inApp',
-            inAppSettings: {
-                frequency: 1,
-                capping: 0.1,
-                interval: 0,
-                timeout: 5,
-                everyPage: true
-            }
-        }).then(() => {
-            // অ্যাড দেখা শেষ হলে রিওয়ার্ড
-            completeAd();
-            btn.disabled = false;
-        }).catch(e => {
-            // যদি ইন-অ্যাপ লোড না হয় তবে রিওয়ার্ডেড ট্রাই করবে
-            show_9384518().then(() => {
-                completeAd();
-                btn.disabled = false;
-            }).catch(() => {
-                btn.innerText = "WATCH AD";
-                btn.disabled = false;
-                alert("অ্যাড লোড হচ্ছে না, কিছুক্ষণ পর চেষ্টা করুন।");
-            });
-        });
-    }
+        /* Container */
+        .container { background: var(--white); border-radius: 35px 35px 0 0; padding: 25px 20px; min-height: 85vh; box-shadow: 0 -10px 20px rgba(0,0,0,0.1); }
+        .brand-box { text-align: center; margin-bottom: 20px; }
+        .brand-text { font-weight: 900; color: var(--main); font-size: 1.6rem; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+        .brand-sub { font-size: 12px; color: #888; display: block; }
+        
+        /* Grid Menu */
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .menu-item { background: white; border-radius: 20px; padding: 20px 5px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06); cursor: pointer; transition: 0.2s; }
+        .menu-item:active { transform: scale(0.9); }
+        .icon-box { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; color: white; font-size: 20px; }
 
-    function completeAd() {
-        balance += 0.07;
-        adCount++;
-        save();
+        /* Full Screens */
+        .screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 1000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .active-page { display: block; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .back-btn { font-size: 24px; color: var(--main); cursor: pointer; margin-bottom: 20px; display: inline-block; }
+        .btn-action { width: 100%; padding: 15px; border-radius: 15px; border: none; background: var(--main); color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .card { background: var(--bg); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid #ffdeef; }
+        .list-row { display: flex; justify-content: space-between; padding: 12px; background: #f9f9f9; border-radius: 12px; margin-bottom: 8px; }
+        
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin-top: 5px; box-sizing: border-box; }
+        .hidden-task { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="home-page">
+        <div class="header">
+            <div class="u-info">
+                <img src="" id="home-avatar" class="avatar">
+                <div><b id="home-name">User</b><br><small id="home-tag">@username</small></div>
+            </div>
+            <div class="wallet-box">৳ <span id="main-balance">0.00</span></div>
+        </div>
+
+        <div class="container">
+            <div class="brand-box">
+                <h1 class="brand-text">Earn bd <i class="fas fa-check-circle" style="font-size: 18px;"></i></h1>
+                <span class="brand-sub">The Best Earning Platform 2026</span>
+            </div>
+
+            <div class="menu-grid">
+                <div class="menu-item" onclick="nav('monetag-task')"><div class="icon-box" style="background:#7b2ff7;"><i class="fas fa-play"></i></div><small>Start Task</small></div>
+                <div class="menu-item" onclick="nav('tg-task')"><div class="icon-box" style="background:#0088cc;"><i class="fab fa-telegram-plane"></i></div><small>TG Task</small></div>
+                <div class="menu-item" onclick="nav('profile-sc')"><div class="icon-box" style="background:#ff4081;"><i class="fas fa-user"></i></div><small>Profile</small></div>
+                
+                <div class="menu-item" onclick="nav('top-sc')"><div class="icon-box" style="background:#ff9800;"><i class="fas fa-crown"></i></div><small>Top Users</small></div>
+                <div class="menu-item" onclick="nav('withdraw-sc')"><div class="icon-box" style="background:#00c853;"><i class="fas fa-wallet"></i></div><small>Withdraw</small></div>
+                <div class="menu-item" onclick="window.open('https://t.me/earnkingadmin')"><div class="icon-box" style="background:#333;"><i class="fas fa-code"></i></div><small>Developer</small></div>
+                
+                <div class="menu-item" onclick="nav('notice-sc')"><div class="icon-box" style="background:#f44336;"><i class="fas fa-bell"></i></div><small>Notice</small></div>
+                <div class="menu-item" onclick="nav('history-sc')"><div class="icon-box" style="background:#2196f3;"><i class="fas fa-history"></i></div><small>History</small></div>
+                <div class="menu-item" onclick="window.open('https://t.me/earnkingadmin')"><div class="icon-box" style="background:#9c27b0;"><i class="fas fa-headset"></i></div><small>Support</small></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="monetag-task" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
+        <h3 style="text-align:center;">Daily Ad Task</h3>
+        <div class="card" style="text-align:center;">
+            <p style="font-size:18px; font-weight:bold; color:var(--main);">Earn: ৳ ০.০৭</p>
+            <p id="ad-stat">Completed: 0 / 100</p>
+            <div style="background:#eee; height:12px; border-radius:10px; margin:15px 0; overflow:hidden;">
+                <div id="ad-progress-bar" style="background:var(--main); height:100%; width:0%; transition:0.3s;"></div>
+            </div>
+            <button class="btn-action" onclick="runAd()">WATCH AD</button>
+        </div>
+    </div>
+
+    <div id="tg-task" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
+        <h3>Special Tasks</h3>
+        <div id="task-gemgala" class="card">
+            <b>Gemgala Offer (৳ 5.00)</b><br>
+            <p style="font-size:11px; color:#555;">সীমা: ১০০ জন | প্রমাণ: ফেস ভেরিফাইড স্ক্রিনশট।</p>
+            <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://getblock.me/u/24587869')">Open Link</button>
+            <input type="file" id="gem-file" style="margin-top:10px;">
+            <button class="btn-action" onclick="finishTGTask('task-gemgala', 5, true)">Submit Proof</button>
+        </div>
+        <div id="task-channel" class="card">
+            <b>Join Channel (৳ 1.00)</b><br>
+            <p style="font-size:11px; color:#555;">সীমা: ১০০০ জন | জয়েন করে ভেরিফাই করুন।</p>
+            <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://t.me/incomeupdattesbd')">Join Now</button>
+            <button class="btn-action" onclick="finishTGTask('task-channel', 1, false)">Verify Join</button>
+        </div>
+        <div id="no-tasks" class="hidden-task" style="text-align:center; margin-top:50px; color:#999;">
+            <i class="fas fa-check-double" style="font-size:50px;"></i>
+            <p>আপনার সব টাস্ক শেষ!</p>
+        </div>
+    </div>
+
+    <div id="profile-sc" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
+        <div style="text-align:center;">
+            <img id="prof-img" src="" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--main);">
+            <h2 id="prof-name">User</h2>
+            <div class="card">
+                <div class="list-row"><span>Balance:</span> ৳ <span class="val-bal">0.00</span></div>
+                <div class="list-row"><span>Total Tasks:</span> <b id="prof-task-done">0</b></div>
+            </div>
+            <button class="btn-action" onclick="nav('refer-sc')">My Referral Link</button>
+        </div>
+    </div>
+
+    <div id="top-sc" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
+        <h3><i class="fas fa-crown" style="color:gold;"></i> Top 10 Earners</h3>
+        <div id="leaderboard">
+            <div class="list-row"><span>1. MD Sobuj</span> <b>৳ 105.00</b></div>
+            <div class="list-row"><span>2. Rakib Islam</span> <b>৳ 80.50</b></div>
+            <div class="list-row"><span>3. Sumon Ahmad</span> <b>৳ 65.00</b></div>
+            <div class="list-row"><span>4. You</span> <b>৳ <span class="val-bal">0.00</span></b></div>
+        </div>
+    </div>
+
+    <div id="withdraw-sc" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
+        <div class="card" style="background:var(--main); color:white; text-align:center;">
+            <p>Current Balance</p>
+            <h1>৳ <span class="val-bal">0.00</span></h1>
+        </div>
+        <select id="w-method"><option value="Bkash">Bkash</option><option value="Nagad">Nagad</option></select>
+        <input type="number" id="w-amt" placeholder="Enter amount (Min 50)">
+        <input type="text" id="w-num" placeholder="Enter Number">
+        <button class="btn-action" onclick="doWithdraw()">WITHDRAW NOW</button>
+    </div>
+
+    <div id="history-sc" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
+        <h3>Withdraw History</h3>
+        <div style="text-align:center; margin-top:50px; color:#999;">
+            <i class="fas fa-history" style="font-size:50px;"></i>
+            <p>No history found!</p>
+        </div>
+    </div>
+
+    <div id="notice-sc" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
+        <h3>Notice Board</h3>
+        <div class="card">
+            📢 <b>Earn bd Update:</b><br><br>
+            - প্রতি অ্যাডে পাবেন ০.০৭ টাকা।<br>
+            - রেফার বোনাস ১ টাকা।<br>
+            - পেমেন্ট লিমিট ৫০ টাকা বিকাশ ও নগদে।
+        </div>
+    </div>
+
+    <div id="refer-sc" class="screen">
+        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
+        <h3>Refer & Earn</h3>
+        <div class="card" style="text-align:center;">
+            <p>প্রতি সফল রেফারে পাবেন ১ টাকা!</p>
+            <div id="ref-link-box" style="background:#fff; padding:15px; border:2px dashed var(--main); font-size:11px; word-break:break-all; margin:10px 0;">Loading...</div>
+            <button class="btn-action" onclick="copyRef()">COPY LINK</button>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        
+        let balance = parseFloat(localStorage.getItem('user_bal')) || 0.00;
+        let adCount = parseInt(localStorage.getItem('user_ads')) || 0;
+        const BOT_USER = "earnbd75_bot";
+
+        if(tg.initDataUnsafe.user) {
+            const u = tg.initDataUnsafe.user;
+            document.getElementById('home-name').innerText = u.first_name;
+            document.getElementById('prof-name').innerText = u.first_name;
+            document.getElementById('home-tag').innerText = "@" + (u.username || "user");
+            const pic = u.photo_url || "https://ui-avatars.com/api/?background=ff007f&color=fff&name=" + u.first_name;
+            document.getElementById('home-avatar').src = pic;
+            document.getElementById('prof-img').src = pic;
+            document.getElementById('ref-link-box').innerText = `https://t.me/${BOT_USER}?start=${u.id}`;
+        }
+
+        function nav(id) { 
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page'));
+            document.getElementById(id).classList.add('active-page');
+            if(id === 'tg-task') checkCompletedTasks();
+        }
+        function back() { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page')); }
+
+        function runAd() {
+            if(adCount >= 100) return alert("Limit Over!");
+            if (typeof show_9465942 === 'function') {
+                show_9465942().then(() => { completeAd(); }).catch(() => { completeAd(); });
+            } else { completeAd(); }
+        }
+
+        function completeAd() {
+            balance += 0.07; adCount++;
+            save(); updateUI();
+            tg.showPopup({message: "০.০৭ টাকা যোগ হয়েছে!"});
+        }
+
+        function finishTGTask(taskId, reward, isFile) {
+            if(isFile && !document.getElementById('gem-file').files[0]) return alert("ফাইল আপলোড করুন!");
+            balance += reward;
+            localStorage.setItem(taskId, 'done');
+            save(); updateUI(); checkCompletedTasks();
+            alert("টাস্ক সফল!");
+        }
+
+        function checkCompletedTasks() {
+            if(localStorage.getItem('task-gemgala') === 'done') document.getElementById('task-gemgala').classList.add('hidden-task');
+            if(localStorage.getItem('task-channel') === 'done') document.getElementById('task-channel').classList.add('hidden-task');
+            if(localStorage.getItem('task-gemgala') === 'done' && localStorage.getItem('task-channel') === 'done') document.getElementById('no-tasks').classList.remove('hidden-task');
+        }
+
+        function doWithdraw() {
+            const a = parseFloat(document.getElementById('w-amt').value);
+            if(a < 50 || a > balance) return alert("সঠিক এমাউন্ট দিন (Min 50)!");
+            balance -= a; save(); updateUI();
+            alert("উইথড্র রিকোয়েস্ট সফল!");
+        }
+
+        function save() { localStorage.setItem('user_bal', balance); localStorage.setItem('user_ads', adCount); }
+        
+        function updateUI() {
+            document.getElementById('main-balance').innerText = balance.toFixed(2);
+            document.querySelectorAll('.val-bal').forEach(e => e.innerText = balance.toFixed(2));
+            document.getElementById('ad-stat').innerText = `Completed: ${adCount} / 100`;
+            document.getElementById('ad-progress-bar').style.width = adCount + "%";
+            document.getElementById('prof-task-done').innerText = adCount;
+        }
+
+        function copyRef() {
+            const link = document.getElementById('ref-link-box').innerText;
+            navigator.clipboard.writeText(link).then(() => alert("Link Copied!"));
+        }
+
         updateUI();
-        document.getElementById('watch-btn').innerText = "WATCH AD";
-        tg.showPopup({
-            title: "Success",
-            message: "৳ ০.০৭ যোগ হয়েছে! পরবর্তী অ্যাডের জন্য তৈরি হন।"
-        });
-    }
-</script>
+    </script>
+</body>
+</html>
