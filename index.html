@@ -13,25 +13,21 @@
         :root { --main: #ff007f; --white: #ffffff; --bg: #fff0f5; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: linear-gradient(180deg, #ff007f 0%, #ff69b4 100%); color: #333; min-height: 100vh; overflow-x: hidden; }
         
-        /* Header */
         .header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; color: white; }
         .u-info { display: flex; align-items: center; gap: 12px; }
         .avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
         .wallet-box { background: rgba(0,0,0,0.25); padding: 7px 15px; border-radius: 20px; font-weight: bold; }
 
-        /* Container */
         .container { background: var(--white); border-radius: 35px 35px 0 0; padding: 25px 20px; min-height: 85vh; box-shadow: 0 -10px 20px rgba(0,0,0,0.1); }
         .brand-box { text-align: center; margin-bottom: 20px; }
         .brand-text { font-weight: 900; color: var(--main); font-size: 1.6rem; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
         .brand-sub { font-size: 12px; color: #888; display: block; }
         
-        /* Grid Menu */
         .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .menu-item { background: white; border-radius: 20px; padding: 20px 5px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06); cursor: pointer; transition: 0.2s; }
         .menu-item:active { transform: scale(0.9); }
         .icon-box { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; color: white; font-size: 20px; }
 
-        /* Full Screens */
         .screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 1000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .active-page { display: block; animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -66,11 +62,9 @@
                 <div class="menu-item" onclick="nav('monetag-task')"><div class="icon-box" style="background:#7b2ff7;"><i class="fas fa-play"></i></div><small>Start Task</small></div>
                 <div class="menu-item" onclick="nav('tg-task')"><div class="icon-box" style="background:#0088cc;"><i class="fab fa-telegram-plane"></i></div><small>TG Task</small></div>
                 <div class="menu-item" onclick="nav('profile-sc')"><div class="icon-box" style="background:#ff4081;"><i class="fas fa-user"></i></div><small>Profile</small></div>
-                
                 <div class="menu-item" onclick="nav('top-sc')"><div class="icon-box" style="background:#ff9800;"><i class="fas fa-crown"></i></div><small>Top Users</small></div>
                 <div class="menu-item" onclick="nav('withdraw-sc')"><div class="icon-box" style="background:#00c853;"><i class="fas fa-wallet"></i></div><small>Withdraw</small></div>
                 <div class="menu-item" onclick="window.open('https://t.me/earnkingadmin')"><div class="icon-box" style="background:#333;"><i class="fas fa-code"></i></div><small>Developer</small></div>
-                
                 <div class="menu-item" onclick="nav('notice-sc')"><div class="icon-box" style="background:#f44336;"><i class="fas fa-bell"></i></div><small>Notice</small></div>
                 <div class="menu-item" onclick="nav('history-sc')"><div class="icon-box" style="background:#2196f3;"><i class="fas fa-history"></i></div><small>History</small></div>
                 <div class="menu-item" onclick="window.open('https://t.me/earnkingadmin')"><div class="icon-box" style="background:#9c27b0;"><i class="fas fa-headset"></i></div><small>Support</small></div>
@@ -103,7 +97,7 @@
         </div>
         <div id="task-channel" class="card">
             <b>Join Channel (৳ 1.00)</b><br>
-            <p style="font-size:11px; color:#555;">সীমা: ১০০০ জন | জয়েন করে ভেরিফাই করুন।</p>
+            <p style="font-size:11px; color:#555;">সীমা: ১০০০ জন | জয়েন করে ভেরিফাই করুন।</p>
             <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://t.me/incomeupdattesbd')">Join Now</button>
             <button class="btn-action" onclick="finishTGTask('task-channel', 1, false)">Verify Join</button>
         </div>
@@ -183,10 +177,21 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         
+        // Data Initialization
         let balance = parseFloat(localStorage.getItem('user_bal')) || 0.00;
         let adCount = parseInt(localStorage.getItem('user_ads')) || 0;
+        let lastDate = localStorage.getItem('last_ad_date');
+        const today = new Date().toLocaleDateString();
         const BOT_USER = "earnbd75_bot";
 
+        // --- ডেইলি অ্যাড রিসেট লজিক ---
+        if (lastDate !== today) {
+            adCount = 0;
+            localStorage.setItem('user_ads', 0);
+            localStorage.setItem('last_ad_date', today);
+        }
+
+        // Load User Info from Telegram
         if(tg.initDataUnsafe.user) {
             const u = tg.initDataUnsafe.user;
             document.getElementById('home-name').innerText = u.first_name;
@@ -198,6 +203,7 @@
             document.getElementById('ref-link-box').innerText = `https://t.me/${BOT_USER}?start=${u.id}`;
         }
 
+        // Navigation
         function nav(id) { 
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page'));
             document.getElementById(id).classList.add('active-page');
@@ -205,24 +211,30 @@
         }
         function back() { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page')); }
 
+        // Ad System
         function runAd() {
-            if(adCount >= 100) return alert("Limit Over!");
+            if(adCount >= 100) return alert("আজকের লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।");
             if (typeof show_9465942 === 'function') {
                 show_9465942().then(() => { completeAd(); }).catch(() => { completeAd(); });
             } else { completeAd(); }
         }
 
         function completeAd() {
-            balance += 0.07; adCount++;
-            save(); updateUI();
-            tg.showPopup({message: "০.০৭ টাকা যোগ হয়েছে!"});
+            balance += 0.07; 
+            adCount++;
+            save(); 
+            updateUI();
+            tg.showPopup({message: "০.০৭ টাকা যোগ হয়েছে!"});
         }
 
+        // Telegram Tasks
         function finishTGTask(taskId, reward, isFile) {
             if(isFile && !document.getElementById('gem-file').files[0]) return alert("ফাইল আপলোড করুন!");
             balance += reward;
             localStorage.setItem(taskId, 'done');
-            save(); updateUI(); checkCompletedTasks();
+            save(); 
+            updateUI(); 
+            checkCompletedTasks();
             alert("টাস্ক সফল!");
         }
 
@@ -232,14 +244,22 @@
             if(localStorage.getItem('task-gemgala') === 'done' && localStorage.getItem('task-channel') === 'done') document.getElementById('no-tasks').classList.remove('hidden-task');
         }
 
+        // Withdraw System
         function doWithdraw() {
             const a = parseFloat(document.getElementById('w-amt').value);
             if(a < 50 || a > balance) return alert("সঠিক এমাউন্ট দিন (Min 50)!");
-            balance -= a; save(); updateUI();
-            alert("উইথড্র রিকোয়েস্ট সফল!");
+            balance -= a; 
+            save(); 
+            updateUI();
+            alert("উইথড্র রিকোয়েস্ট সফল!");
         }
 
-        function save() { localStorage.setItem('user_bal', balance); localStorage.setItem('user_ads', adCount); }
+        // Data Management
+        function save() { 
+            localStorage.setItem('user_bal', balance); 
+            localStorage.setItem('user_ads', adCount); 
+            localStorage.setItem('last_ad_date', today);
+        }
         
         function updateUI() {
             document.getElementById('main-balance').innerText = balance.toFixed(2);
@@ -254,43 +274,8 @@
             navigator.clipboard.writeText(link).then(() => alert("Link Copied!"));
         }
 
+        // Start UI
         updateUI();
     </script>
 </body>
-</html><script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-    
-    let balance = parseFloat(localStorage.getItem('user_bal')) || 0.00;
-    let adCount = parseInt(localStorage.getItem('user_ads')) || 0;
-    let lastDate = localStorage.getItem('last_ad_date'); // শেষ কবে অ্যাড দেখেছে সেই তারিখ
-    
-    // --- ডেইলি অ্যাড রিসেট লজিক (নতুন যুক্ত করা হয়েছে) ---
-    const today = new Date().toLocaleDateString(); // আজকের তারিখ
-    if (lastDate !== today) {
-        adCount = 0; // যদি তারিখ মিলে না যায়, তবে অ্যাড কাউন্ট ০ হবে
-        localStorage.setItem('user_ads', 0);
-        localStorage.setItem('last_ad_date', today);
-    }
-    // -------------------------------------------
-
-    const BOT_USER = "earnbd75_bot";
-
-    // ... (আপনার বাকি কোড একদম আগের মতোই থাকবে) ...
-
-    function completeAd() {
-        balance += 0.07; 
-        adCount++;
-        save(); 
-        updateUI();
-        tg.showPopup({message: "০.০৭ টাকা যোগ হয়েছে!"});
-    }
-
-    function save() { 
-        localStorage.setItem('user_bal', balance); 
-        localStorage.setItem('user_ads', adCount); 
-        localStorage.setItem('last_ad_date', today); // তারিখও সেভ রাখা হবে
-    }
-    
-    // ... (বাকি সব ফাংশন: updateUI, nav, doWithdraw ইত্যাদি যা ছিল তাই থাকবে) ...
-</script>
+</html>
