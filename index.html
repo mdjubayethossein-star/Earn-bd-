@@ -257,4 +257,40 @@
         updateUI();
     </script>
 </body>
-</html>
+</html><script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    
+    let balance = parseFloat(localStorage.getItem('user_bal')) || 0.00;
+    let adCount = parseInt(localStorage.getItem('user_ads')) || 0;
+    let lastDate = localStorage.getItem('last_ad_date'); // শেষ কবে অ্যাড দেখেছে সেই তারিখ
+    
+    // --- ডেইলি অ্যাড রিসেট লজিক (নতুন যুক্ত করা হয়েছে) ---
+    const today = new Date().toLocaleDateString(); // আজকের তারিখ
+    if (lastDate !== today) {
+        adCount = 0; // যদি তারিখ মিলে না যায়, তবে অ্যাড কাউন্ট ০ হবে
+        localStorage.setItem('user_ads', 0);
+        localStorage.setItem('last_ad_date', today);
+    }
+    // -------------------------------------------
+
+    const BOT_USER = "earnbd75_bot";
+
+    // ... (আপনার বাকি কোড একদম আগের মতোই থাকবে) ...
+
+    function completeAd() {
+        balance += 0.07; 
+        adCount++;
+        save(); 
+        updateUI();
+        tg.showPopup({message: "০.০৭ টাকা যোগ হয়েছে!"});
+    }
+
+    function save() { 
+        localStorage.setItem('user_bal', balance); 
+        localStorage.setItem('user_ads', adCount); 
+        localStorage.setItem('last_ad_date', today); // তারিখও সেভ রাখা হবে
+    }
+    
+    // ... (বাকি সব ফাংশন: updateUI, nav, doWithdraw ইত্যাদি যা ছিল তাই থাকবে) ...
+</script>
