@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Earn bd</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src='//libtl.com/sdk.js' data-zone='9465942' data-sdk='show_9465942'></script>
 
     <style>
@@ -76,7 +78,7 @@
         <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
         <h3 style="text-align:center;">Daily Ad Task</h3>
         <div class="card" style="text-align:center;">
-            <p style="font-size:18px; font-weight:bold; color:var(--main);">Earn: ৳ ০.০৭</p>
+            <p id="reward-text" style="font-size:18px; font-weight:bold; color:var(--main);">Earn: ৳ ০.০৭</p>
             <p id="ad-stat">Completed: 0 / 100</p>
             <div style="background:#eee; height:12px; border-radius:10px; margin:15px 0; overflow:hidden;">
                 <div id="ad-progress-bar" style="background:var(--main); height:100%; width:0%; transition:0.3s;"></div>
@@ -90,20 +92,8 @@
         <h3>Special Tasks</h3>
         <div id="task-gemgala" class="card">
             <b>Gemgala Offer (৳ 5.00)</b><br>
-            <p style="font-size:11px; color:#555;">সীমা: ১০০ জন | প্রমাণ: ফেস ভেরিফাইড স্ক্রিনশট।</p>
             <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://getblock.me/u/24587869')">Open Link</button>
-            <input type="file" id="gem-file" style="margin-top:10px;">
-            <button class="btn-action" onclick="finishTGTask('task-gemgala', 5, true)">Submit Proof</button>
-        </div>
-        <div id="task-channel" class="card">
-            <b>Join Channel (৳ 1.00)</b><br>
-            <p style="font-size:11px; color:#555;">সীমা: ১০০০ জন | জয়েন করে ভেরিফাই করুন।</p>
-            <button class="btn-action" style="background:#0088cc;" onclick="window.open('https://t.me/incomeupdattesbd')">Join Now</button>
-            <button class="btn-action" onclick="finishTGTask('task-channel', 1, false)">Verify Join</button>
-        </div>
-        <div id="no-tasks" class="hidden-task" style="text-align:center; margin-top:50px; color:#999;">
-            <i class="fas fa-check-double" style="font-size:50px;"></i>
-            <p>আপনার সব টাস্ক শেষ!</p>
+            <button class="btn-action" onclick="alert('Submit process coming soon')">Submit Proof</button>
         </div>
     </div>
 
@@ -120,17 +110,6 @@
         </div>
     </div>
 
-    <div id="top-sc" class="screen">
-        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
-        <h3><i class="fas fa-crown" style="color:gold;"></i> Top 10 Earners</h3>
-        <div id="leaderboard">
-            <div class="list-row"><span>1. MD Sobuj</span> <b>৳ 105.00</b></div>
-            <div class="list-row"><span>2. Rakib Islam</span> <b>৳ 80.50</b></div>
-            <div class="list-row"><span>3. Sumon Ahmad</span> <b>৳ 65.00</b></div>
-            <div class="list-row"><span>4. You</span> <b>৳ <span class="val-bal">0.00</span></b></div>
-        </div>
-    </div>
-
     <div id="withdraw-sc" class="screen">
         <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
         <div class="card" style="background:var(--main); color:white; text-align:center;">
@@ -143,138 +122,111 @@
         <button class="btn-action" onclick="doWithdraw()">WITHDRAW NOW</button>
     </div>
 
-    <div id="history-sc" class="screen">
-        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
-        <h3>Withdraw History</h3>
-        <div style="text-align:center; margin-top:50px; color:#999;">
-            <i class="fas fa-history" style="font-size:50px;"></i>
-            <p>No history found!</p>
-        </div>
-    </div>
-
-    <div id="notice-sc" class="screen">
-        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
-        <h3>Notice Board</h3>
-        <div class="card">
-            📢 <b>Earn bd Update:</b><br><br>
-            - প্রতি অ্যাডে পাবেন ০.০৭ টাকা।<br>
-            - রেফার বোনাস ১ টাকা।<br>
-            - পেমেন্ট লিমিট ৫০ টাকা বিকাশ ও নগদে।
-        </div>
-    </div>
-
-    <div id="refer-sc" class="screen">
-        <i class="fas fa-arrow-left back-btn" onclick="back()"></i>
-        <h3>Refer & Earn</h3>
-        <div class="card" style="text-align:center;">
-            <p>প্রতি সফল রেফারে পাবেন ১ টাকা!</p>
-            <div id="ref-link-box" style="background:#fff; padding:15px; border:2px dashed var(--main); font-size:11px; word-break:break-all; margin:10px 0;">Loading...</div>
-            <button class="btn-action" onclick="copyRef()">COPY LINK</button>
-        </div>
-    </div>
+    <div id="top-sc" class="screen"><i class="fas fa-arrow-left back-btn" onclick="back()"></i><h3 style="text-align:center;">Top Users</h3><div id="leaderboard"></div></div>
+    <div id="notice-sc" class="screen"><i class="fas fa-arrow-left back-btn" onclick="back()"></i><h3>Notice</h3><div class="card">📢 প্রতি অ্যাডে পাবেন ০.০৭ টাকা। রেফার বোনাস ১ টাকা।</div></div>
+    <div id="history-sc" class="screen"><i class="fas fa-arrow-left back-btn" onclick="back()"></i><h3>History</h3><p style="text-align:center; color:#999;">No History</p></div>
+    <div id="refer-sc" class="screen"><i class="fas fa-arrow-left back-btn" onclick="back()"></i><h3>Refer</h3><div class="card" id="ref-link-box"></div></div>
 
     <script>
+        // --- Firebase Config ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAC0VHMLLTtwPZ4LGpEMCYnaM7NbAgnY0",
+            databaseURL: "https://earn-bd-793b3-default-rtdb.firebaseio.com"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
         const tg = window.Telegram.WebApp;
         tg.expand();
-        
-        // Data Initialization
-        let balance = parseFloat(localStorage.getItem('user_bal')) || 0.00;
-        let adCount = parseInt(localStorage.getItem('user_ads')) || 0;
-        let lastDate = localStorage.getItem('last_ad_date');
-        const today = new Date().toLocaleDateString();
-        const BOT_USER = "earnbd75_bot";
 
-        // --- ডেইলি অ্যাড রিসেট লজিক ---
-        if (lastDate !== today) {
-            adCount = 0;
-            localStorage.setItem('user_ads', 0);
-            localStorage.setItem('last_ad_date', today);
-        }
+        let balance = 0.00;
+        let adCount = 0;
+        let userId = "guest";
+        let remoteConfig = { status: 'on', reward: 0.07, limit: 100 };
 
-        // Load User Info from Telegram
+        // ১. এডমিন প্যানেল সেটিংস
+        db.ref('admin_settings/monetag').on('value', (snap) => {
+            if(snap.exists()) {
+                remoteConfig = snap.val();
+                document.getElementById('reward-text').innerText = `Earn: ৳ ${remoteConfig.reward}`;
+                updateUI();
+            }
+        });
+
+        // ২. ইউজার ডাটা এবং বাটন লজিক
         if(tg.initDataUnsafe.user) {
             const u = tg.initDataUnsafe.user;
+            userId = u.id;
             document.getElementById('home-name').innerText = u.first_name;
             document.getElementById('prof-name').innerText = u.first_name;
             document.getElementById('home-tag').innerText = "@" + (u.username || "user");
             const pic = u.photo_url || "https://ui-avatars.com/api/?background=ff007f&color=fff&name=" + u.first_name;
             document.getElementById('home-avatar').src = pic;
             document.getElementById('prof-img').src = pic;
-            document.getElementById('ref-link-box').innerText = `https://t.me/${BOT_USER}?start=${u.id}`;
+            document.getElementById('ref-link-box').innerText = `https://t.me/earnbd75_bot?start=${u.id}`;
+
+            db.ref('users/' + userId).on('value', (snap) => {
+                if(snap.exists()){
+                    const data = snap.val();
+                    balance = parseFloat(data.balance) || 0;
+                    adCount = parseInt(data.adCount) || 0;
+                    updateUI();
+                } else {
+                    db.ref('users/' + userId).set({ name: u.first_name, balance: 0, adCount: 0 });
+                }
+            });
         }
 
-        // Navigation
-        function nav(id) { 
+        // --- মূল ফাংশনসমূহ ---
+        function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page'));
-            document.getElementById(id).classList.add('active-page');
-            if(id === 'tg-task') checkCompletedTasks();
+            const target = document.getElementById(id);
+            if(target) target.classList.add('active-page');
         }
-        function back() { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page')); }
 
-        // Ad System
+        function back() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-page'));
+        }
+
         function runAd() {
-            if(adCount >= 100) return alert("আজকের লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।");
+            if(remoteConfig.status === 'off') return alert("টাস্ক বর্তমানে বন্ধ আছে।");
+            if(adCount >= remoteConfig.limit) return alert("ডেইলি লিমিট শেষ!");
+            
             if (typeof show_9465942 === 'function') {
                 show_9465942().then(() => { completeAd(); }).catch(() => { completeAd(); });
             } else { completeAd(); }
         }
 
         function completeAd() {
-            balance += 0.07; 
-            adCount++;
-            save(); 
-            updateUI();
-            tg.showPopup({message: "০.০৭ টাকা যোগ হয়েছে!"});
+            let nBal = balance + parseFloat(remoteConfig.reward);
+            let nCount = adCount + 1;
+            db.ref('users/' + userId).update({ balance: nBal, adCount: nCount });
+            tg.showPopup({message: "টাকা যোগ হয়েছে!"});
         }
 
-        // Telegram Tasks
-        function finishTGTask(taskId, reward, isFile) {
-            if(isFile && !document.getElementById('gem-file').files[0]) return alert("ফাইল আপলোড করুন!");
-            balance += reward;
-            localStorage.setItem(taskId, 'done');
-            save(); 
-            updateUI(); 
-            checkCompletedTasks();
-            alert("টাস্ক সফল!");
-        }
-
-        function checkCompletedTasks() {
-            if(localStorage.getItem('task-gemgala') === 'done') document.getElementById('task-gemgala').classList.add('hidden-task');
-            if(localStorage.getItem('task-channel') === 'done') document.getElementById('task-channel').classList.add('hidden-task');
-            if(localStorage.getItem('task-gemgala') === 'done' && localStorage.getItem('task-channel') === 'done') document.getElementById('no-tasks').classList.remove('hidden-task');
-        }
-
-        // Withdraw System
         function doWithdraw() {
-            const a = parseFloat(document.getElementById('w-amt').value);
-            if(a < 50 || a > balance) return alert("সঠিক এমাউন্ট দিন (Min 50)!");
-            balance -= a; 
-            save(); 
-            updateUI();
-            alert("উইথড্র রিকোয়েস্ট সফল!");
+            const amt = parseFloat(document.getElementById('w-amt').value);
+            const num = document.getElementById('w-num').value;
+            if(amt < 50 || amt > balance) return alert("সঠিক এমাউন্ট দিন (Min 50)");
+            
+            db.ref('withdrawals/' + Date.now()).set({
+                uid: userId, name: document.getElementById('home-name').innerText,
+                amount: amt, number: num, method: document.getElementById('w-method').value, status: 'pending'
+            });
+            db.ref('users/' + userId).update({ balance: balance - amt });
+            alert("উইথড্র রিকোয়েস্ট সফল!");
+            back();
         }
 
-        // Data Management
-        function save() { 
-            localStorage.setItem('user_bal', balance); 
-            localStorage.setItem('user_ads', adCount); 
-            localStorage.setItem('last_ad_date', today);
-        }
-        
         function updateUI() {
             document.getElementById('main-balance').innerText = balance.toFixed(2);
             document.querySelectorAll('.val-bal').forEach(e => e.innerText = balance.toFixed(2));
-            document.getElementById('ad-stat').innerText = `Completed: ${adCount} / 100`;
-            document.getElementById('ad-progress-bar').style.width = adCount + "%";
+            document.getElementById('ad-stat').innerText = `Completed: ${adCount} / ${remoteConfig.limit}`;
             document.getElementById('prof-task-done').innerText = adCount;
+            let prg = (adCount / remoteConfig.limit) * 100;
+            document.getElementById('ad-progress-bar').style.width = prg + "%";
         }
 
-        function copyRef() {
-            const link = document.getElementById('ref-link-box').innerText;
-            navigator.clipboard.writeText(link).then(() => alert("Link Copied!"));
-        }
-
-        // Start UI
         updateUI();
     </script>
 </body>
